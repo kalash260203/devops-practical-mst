@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VALORANT Hub | Squad Up</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0f16;
+        --surface: #101926;
+        --surface-2: #172334;
+        --text: #f4f8ff;
+        --muted: #9eb5cc;
+        --hot: #ff4655;
+        --teal: #21d4c5;
+        --line: rgba(255, 255, 255, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Barlow", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(900px 400px at 80% -10%, rgba(33, 212, 197, 0.18), transparent 60%),
+          radial-gradient(800px 500px at 0% 100%, rgba(255, 70, 85, 0.2), transparent 65%),
+          linear-gradient(160deg, #06090f, var(--bg) 48%, #0d1724);
+        min-height: 100vh;
+      }
+
+      .noise {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.06;
+        background-image: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(255, 255, 255, 0.7) 3px
+        );
+      }
+
+      .wrap {
+        width: min(1120px, 92%);
+        margin: 0 auto;
+      }
+
+      .topbar {
+        padding: 18px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.45rem;
+        letter-spacing: 0.09em;
+        font-weight: 700;
+      }
+
+      .logo span {
+        color: var(--hot);
+      }
+
+      .nav {
+        display: flex;
+        gap: 18px;
+      }
+
+      .nav a {
+        color: var(--muted);
+        text-decoration: none;
+        font-weight: 500;
+      }
+
+      .nav a:hover {
+        color: var(--text);
+      }
+
+      .hero {
+        margin-top: 28px;
+        padding: clamp(24px, 5vw, 60px);
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background:
+          linear-gradient(130deg, rgba(255, 70, 85, 0.16), rgba(16, 25, 38, 0.9) 40%),
+          linear-gradient(310deg, rgba(33, 212, 197, 0.11), transparent 40%);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero::after {
+        content: "V";
+        position: absolute;
+        right: clamp(10px, 5vw, 48px);
+        bottom: -24px;
+        font-family: "Rajdhani", sans-serif;
+        font-size: clamp(7rem, 18vw, 14rem);
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.05);
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 70, 85, 0.2);
+        color: #ffd5d9;
+        border: 1px solid rgba(255, 70, 85, 0.45);
+        border-radius: 999px;
+        padding: 8px 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.78rem;
+      }
+
+      h1 {
+        margin: 14px 0 12px;
+        font-family: "Rajdhani", sans-serif;
+        font-size: clamp(2rem, 6vw, 4.9rem);
+        line-height: 0.94;
+        letter-spacing: 0.02em;
+        max-width: 11ch;
+      }
+
+      .sub {
+        color: var(--muted);
+        font-size: clamp(0.98rem, 2vw, 1.2rem);
+        max-width: 62ch;
+        line-height: 1.65;
+      }
+
+      .cta-row {
+        margin-top: 24px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .btn {
+        font-family: "Rajdhani", sans-serif;
+        font-weight: 700;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 12px 18px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        transition: transform 180ms ease, box-shadow 180ms ease;
+      }
+
+      .btn-main {
+        color: #fff;
+        background: linear-gradient(135deg, var(--hot), #e12e3f);
+        box-shadow: 0 12px 24px rgba(255, 70, 85, 0.28);
+      }
+
+      .btn-alt {
+        color: #bdece8;
+        border-color: rgba(33, 212, 197, 0.6);
+        background: rgba(33, 212, 197, 0.12);
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+      }
+
+      .grid {
+        margin: 34px 0;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+
+      .card {
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: linear-gradient(170deg, rgba(255, 255, 255, 0.03), rgba(16, 25, 38, 0.85));
+      }
+
+      .card h3 {
+        margin: 0 0 8px;
+        font-family: "Rajdhani", sans-serif;
+        letter-spacing: 0.04em;
+        font-size: 1.2rem;
+      }
+
+      .card p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+
+      .section-title {
+        margin: 8px 0 14px;
+        font-family: "Rajdhani", sans-serif;
+        font-size: clamp(1.5rem, 3.4vw, 2.5rem);
+        letter-spacing: 0.04em;
+      }
+
+      .maps {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .map {
+        min-height: 140px;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 14px;
+        background: linear-gradient(145deg, var(--surface), var(--surface-2));
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .map b {
+        font-family: "Rajdhani", sans-serif;
+        font-size: 1.2rem;
+      }
+
+      .rank {
+        color: #95ffee;
+        font-size: 0.84rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      .join {
+        margin: 34px 0 48px;
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: clamp(20px, 4vw, 34px);
+        background:
+          linear-gradient(120deg, rgba(33, 212, 197, 0.14), transparent 40%),
+          linear-gradient(0deg, rgba(255, 70, 85, 0.1), rgba(255, 70, 85, 0.1));
+      }
+
+      .join p {
+        margin: 8px 0 0;
+        color: #d4deeb;
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(16px);
+        animation: reveal 700ms cubic-bezier(0.17, 0.67, 0.25, 1) forwards;
+      }
+
+      .delay-1 {
+        animation-delay: 120ms;
+      }
+
+      .delay-2 {
+        animation-delay: 220ms;
+      }
+
+      @keyframes reveal {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 980px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .maps {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 680px) {
+        .topbar {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 10px;
+        }
+
+        .nav {
+          gap: 12px;
+          flex-wrap: wrap;
+        }
+
+        .maps {
+          grid-template-columns: 1fr;
+        }
+
+        .btn {
+          width: 100%;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+
+    <header class="wrap topbar reveal">
+      <div class="logo">VALORANT <span>HUB</span></div>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="#agents">Agents</a>
+        <a href="#maps">Maps</a>
+        <a href="#join">Join Squad</a>
+      </nav>
+    </header>
+
+    <main class="wrap">
+      <section class="hero reveal delay-1">
+        <span class="pill">Episode 9 - Competitive Mode</span>
+        <h1>CLUTCH BETTER. PLAY SMARTER.</h1>
+        <p class="sub">
+          Build your stack, review lineups, and lock in your next ranked win. This fan-made
+          hub gives Valorant players one place for map focus, team roles, and ready-to-run
+          scrim sessions.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-main" href="#join">Find Teammates</a>
+          <a class="btn btn-alt" href="#maps">See Map Rotation</a>
+        </div>
+      </section>
+
+      <section id="agents" class="reveal delay-2">
+        <h2 class="section-title">Role Highlights</h2>
+        <div class="grid">
+          <article class="card">
+            <h3>Duelists</h3>
+            <p>
+              Entry first with confidence. Build opening pressure with coordinated flashes and
+              fast space control.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Controllers</h3>
+            <p>
+              Deny vision and cut rotations. Time smokes with utility to force better duels.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Sentinels</h3>
+            <p>
+              Lock flanks, anchor sites, and convert post-plant with calm utility discipline.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="maps" class="reveal">
+        <h2 class="section-title">Map Focus This Week</h2>
+        <div class="maps">
+          <article class="map"><b>Ascent</b><span class="rank">Aim + Mid Control</span></article>
+          <article class="map"><b>Bind</b><span class="rank">Exec Timing</span></article>
+          <article class="map"><b>Haven</b><span class="rank">Fast Rotations</span></article>
+          <article class="map"><b>Lotus</b><span class="rank">Utility Combos</span></article>
+        </div>
+      </section>
+
+      <section id="join" class="join reveal delay-1">
+        <h2 class="section-title">Ready To Queue?</h2>
+        <p>
+          Set your role, share your rank, and start finding serious teammates for comp and
+          weekly scrims.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-main" href="#">Create Team Card</a>
+          <a class="btn btn-alt" href="#">Join Community</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
